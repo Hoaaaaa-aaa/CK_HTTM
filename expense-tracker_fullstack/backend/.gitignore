@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Environment
+.env.development
+.env.production
+.env.local
+.env.test
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Runtime data
+pids/
+*.pid
+*.seed
+
+# Coverage & testing
+coverage/
+.nyc_output/
+
+# IDE
+.idea/
+.vscode/
+*.sublime-workspace
+
+# Misc
+.DS_Store
+.tmp/
+.temp/
