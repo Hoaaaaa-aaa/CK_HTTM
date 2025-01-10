@@ -1,10 +1,19 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import avatar from '../../img/avatar.png'
 import { signout } from '../../utils/Icons'
 import { menuItems } from '../../utils/menuItems'
+import { useNavigate } from 'react-router-dom'
 
 function Navigation({active, setActive}) {
+    const navigate = useNavigate();
+    
+    const handleSignOut = () => {
+        // Xóa token từ localStorage
+        localStorage.removeItem('token');
+        // Chuyển hướng về trang login
+        navigate('/login');
+    };
     
     return (
         <NavStyled>
@@ -28,7 +37,7 @@ function Navigation({active, setActive}) {
                 })}
             </ul>
             <div className="bottom-nav">
-                <li>
+                <li onClick={handleSignOut} className="sign-out">
                     {signout} Sign Out
                 </li>
             </div>
@@ -108,6 +117,28 @@ const NavStyled = styled.nav`
             height: 100%;
             background: #222260;
             border-radius: 0 10px 10px 0;
+        }
+    }
+
+    .bottom-nav {
+        .sign-out {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+            transition: all .3s ease;
+            color: rgba(34, 34, 96, .6);
+            padding-left: 1rem;
+
+            &:hover {
+                color: rgba(34, 34, 96, 1);
+                transform: translateX(5px);
+            }
+
+            i {
+                font-size: 1.4rem;
+                transition: all .3s ease;
+            }
         }
     }
 `;

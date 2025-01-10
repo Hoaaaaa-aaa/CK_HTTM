@@ -13,7 +13,17 @@ app.use(express.json())
 app.use(cors())
 
 //routes
-readdirSync('./routes').map((route) => app.use('/api/v1', require('./routes/' + route)))
+const authRoutes = require('./routes/auth');
+
+// Existing routes
+readdirSync('./routes').map((route) => {
+    if (route !== 'auth.js') { // Skip auth.js as we're handling it separately
+        app.use('/api/v1', require('./routes/' + route))
+    }
+})
+
+// Auth routes
+app.use('/api/v1', authRoutes);
 
 const server = () => {
     db()
