@@ -4,7 +4,7 @@ import styled from 'styled-components';
 const SupersetChart = () => {
     // Di chuyển các biến môi trường vào .env
     const SUPERSET_URL = process.env.REACT_APP_SUPERSET_URL || "https://f8f472ba.us2a.app.preset.io";
-    const DASHBOARD_ID = process.env.REACT_APP_DASHBOARD_ID || "6b072f55-bf3b-473f-9145-20e8a68cb390";
+    const DASHBOARD_ID = process.env.REACT_APP_DASHBOARD_ID || "f6099541-fc22-43bc-9538-b3120bbc2b75";
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
