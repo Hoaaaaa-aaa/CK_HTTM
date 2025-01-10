@@ -8,6 +8,8 @@ import Dashboard from './Components/Dashboard/Dashboard';
 import Income from './Components/Income/Income'
 import Expenses from './Components/Expenses/Expenses';
 import { useGlobalContext } from './context/globalContext';
+import TelegramChat from './Components/Chat/TelegramChat';
+
 
 function App() {
   const [active, setActive] = useState(1)
@@ -25,6 +27,8 @@ function App() {
         return <Income />
       case 4: 
         return <Expenses />
+      case 5:
+        return <TelegramChat />
       default: 
         return <Dashboard />
     }
