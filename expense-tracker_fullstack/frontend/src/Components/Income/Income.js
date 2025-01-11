@@ -35,6 +35,7 @@ function Income() {
                                 category={category} 
                                 indicatorColor="var(--color-green)"
                                 deleteItem={deleteIncome}
+                                    
                             />
                         })}
                     </div>
