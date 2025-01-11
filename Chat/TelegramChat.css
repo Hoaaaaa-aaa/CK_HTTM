@@ -1,0 +1,60 @@
+.telegram-chat {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.chat-header {
+    padding: 15px;
+    background: #0088cc;
+    color: white;
+    border-radius: 8px 8px 0 0;
+}
+
+.chat-messages {
+    height: 400px;
+    overflow-y: auto;
+    padding: 15px;
+}
+
+.message {
+    margin: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 70%;
+}
+
+.sent {
+    background: #0088cc;
+    color: white;
+    margin-left: auto;
+}
+
+.received {
+    background: #e9ecef;
+    margin-right: auto;
+}
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    background: #f8f9fa;
+    border-radius: 0 0 8px 8px;
+}
+
+.chat-input {
+    padding: 15px;
+    border-top: 1px solid #ddd;
+}
+
+.chat-input input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    outline: none;
+} 
