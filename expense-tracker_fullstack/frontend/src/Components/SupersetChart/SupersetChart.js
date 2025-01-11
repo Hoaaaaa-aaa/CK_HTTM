@@ -1,43 +1,37 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
+import { embedDashboard } from "@superset-ui/embedded-sdk";
+import axios from 'axios';
 
 const SupersetChart = () => {
     // Di chuyển các biến môi trường vào .env
-    const SUPERSET_URL = process.env.REACT_APP_SUPERSET_URL || "https://f8f472ba.us2a.app.preset.io";
-    const DASHBOARD_ID = process.env.REACT_APP_DASHBOARD_ID || "f6099541-fc22-43bc-9538-b3120bbc2b75";
-    const [loading, setLoading] = useState(true);
+    const SUPERSET_URL = process.env.REACT_APP_SUPERSET_URL || "http://103.238.235.121:8088";
+    const DASHBOARD_ID = process.env.REACT_APP_DASHBOARD_ID || "19afb03c-a46e-4def-9954-42875193283d";
 
     useEffect(() => {
-        // Xử lý sự kiện khi iframe load xong
-        const handleIframeLoad = () => {
-            setLoading(false);
+        const fetchGuestTokenFromBackend = async () => {
+            const response = await axios.get('http://localhost:5000/api/v1/get-guest-token')
+            return response.data;
         };
 
-        window.addEventListener('message', (event) => {
-            // Kiểm tra origin để đảm bảo an toàn
-            if (event.origin === SUPERSET_URL) {
-                // Xử lý các message từ Superset dashboard nếu cần
-                console.log('Message from Superset:', event.data);
-            }
-        });
-
-        return () => {
-            // Cleanup event listeners
-            window.removeEventListener('message', handleIframeLoad);
-        };
-    }, [SUPERSET_URL]);
+        const mountPoint = document.getElementById("my-superset-container");
+        if (mountPoint) {
+            embedDashboard({
+                id: DASHBOARD_ID,
+                supersetDomain: SUPERSET_URL,
+                mountPoint: mountPoint,
+                fetchGuestToken: fetchGuestTokenFromBackend,
+                dashboardUiConfig: { hideTitle: true },
+            }).catch((error) => {
+                console.error("Error embedding Superset dashboard:", error);
+            });
+        }
+    }, [SUPERSET_URL, DASHBOARD_ID]);
 
     return (
         <EmbedStyled>
-            {loading && <LoadingSpinner>Loading...</LoadingSpinner>}
-            <iframe
-                src={`${SUPERSET_URL}/embedded/${DASHBOARD_ID}`}
-                title="Superset Dashboard"
-                frameBorder="0"
-                allowFullScreen
-                onLoad={() => setLoading(false)}
-                style={{ opacity: loading ? 0 : 1 }}
-            />
+            <div id="my-superset-container" style={{width: '100%', height: '100%'}}>
+            </div>
         </EmbedStyled>
     );
 };
@@ -53,14 +47,6 @@ const EmbedStyled = styled.div`
         border: none;
         transition: opacity 0.3s ease;
     }
-`;
-
-const LoadingSpinner = styled.div`
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    // Thêm styles cho loading spinner
 `;
 
 export default SupersetChart;
