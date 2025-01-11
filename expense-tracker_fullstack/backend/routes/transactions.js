@@ -1,19 +1,54 @@
-const { addExpense, getExpense, deleteExpense } = require('../controllers/expense');
-const { addIncome, getIncomes, deleteIncome } = require('../controllers/income');
-const { getAdvice } = require('../controllers/chat');
-const { getTransactions, getGuestToken } = require('../controllers/transaction');
+const ExpenseModel = require('../models/ExpenseModel')
+const IncomeModel = require('../models/IncomeModel')
+const axios = require('axios');
 
-const router = require('express').Router();
+exports.getTransactions = async (req, res) => {
+    try {
+        const expenses = await ExpenseModel.find()
+        const incomes = await IncomeModel.find()
 
+        const transactions = [...expenses, ...incomes]
+        transactions.sort((a, b) => b.createdAt - a.createdAt)
 
-router.post('/add-income', addIncome)
-    .get('/get-incomes', getIncomes)
-    .delete('/delete-income/:id', deleteIncome)
-    .post('/add-expense', addExpense)
-    .get('/get-expenses', getExpense)
-    .delete('/delete-expense/:id', deleteExpense)
-    .get('/get-transactions', getTransactions)
-    .get('/get-advice', getAdvice)
-    .get('/get-guest-token', getGuestToken)
+        res.status(200).json(transactions)
+    } catch (error) {
+        console.error('Error:', error)
+        res.status(500).json({message: 'Server Error: ' + error.message})
+    }
+}
 
-module.exports = router
+exports.getGuestToken = async (req, res) => {
+    const baseUrl = 'http://103.238.235.121:8088/api/v1/';
+    try {
+        const response = await axios.post(baseUrl + 'security/login', {
+            username: 'admin',
+            password: 'admin',
+            provider: 'db',
+            refresh: false
+        }, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const accessToken = response.data.access_token;
+
+        const headers = {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+        }
+
+        const response2 = await axios.post(baseUrl + 'security/guest_token', {
+            user: {username: "guest_user", first_name: "Guest", last_name: "User"},
+            resources: [{type: "dashboard", id: "19afb03c-a46e-4def-9954-42875193283d"}],
+            rls: []
+        }, {
+            headers: headers
+        });
+
+        const guestToken = response2.data.token;
+        res.status(200).json(guestToken);
+    } catch (error) {
+        res.status(500).json({message: 'Server Error: ' + error.message});
+    }
+}
